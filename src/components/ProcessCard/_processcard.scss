@@ -1,0 +1,51 @@
+@import '../../styles/base';
+
+.card-wrapper {
+    position: relative;
+    width: 175px;
+    height: 211px;
+    @include flex-column-center;
+    justify-content: flex-end;
+    
+    & .content {
+        @include flex-column-center;
+        width: 175px;
+        height: 175px;
+        justify-content: center;
+        padding: 8px;
+        border-radius: 16px;
+        @include color;
+        @include outer-shadow(2px, 6px);
+
+
+        & .references,
+        & .arrival-time {
+            font-size: 16px;
+            margin-top: 8px;
+        }
+    }
+
+    & .pid {
+        position: absolute;
+        width: 72px;
+        height: 72px;
+        border-radius: 50px;
+        font-size: 48px;
+        font-weight: 500;
+        top: 0;
+        // transform: translateY(-50%);
+        @include flex-column-center;
+        @include color;
+        @include outer-shadow(2px, 6px);
+    }
+
+}
+
+.section {
+    @include flex-row-center;
+    font-size: 16px;
+    margin-top: 8px;
+    & .section-icon {
+        margin-right: 8px;
+    }
+}
