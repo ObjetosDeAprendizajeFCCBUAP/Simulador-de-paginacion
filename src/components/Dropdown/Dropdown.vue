@@ -43,7 +43,8 @@ export default defineComponent({
     const show_menu = ref(false);
     const selected_option = ref('');
 
-    const showOption = computed(() => (selected_option.value === '' ? props.placeholder
+    // @ts-ignore
+    const showOption = computed(() => (props.selected.length <= 0 ? props.placeholder
       : selected_option.value));
 
     function toggleMenu() {

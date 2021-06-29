@@ -38,27 +38,32 @@ export default defineComponent({
       },
     }
     
+    // @ts-ignore
     const input_val = computed(valueHandler);
 
     const canIncrement = computed(() : boolean => {
       if(props.max)
+        // @ts-ignore
         return props.value.valueOf() + 1 <= props.max;
       return true;
     });
 
     const canDecrement = computed(() : boolean => {
       if(props.mini)
+        // @ts-ignore
         return props.value.valueOf() - 1 >= props.mini;
       return true;
     });
 
     const increment = () => { 
       if(canIncrement.value)
+      // @ts-ignore
         emit('update:modelValue', props.value + 1);
     }
 
     const decrement = () => { 
       if(canDecrement.value)
+      // @ts-ignore
         emit('update:modelValue', props.value - 1);
     }
 

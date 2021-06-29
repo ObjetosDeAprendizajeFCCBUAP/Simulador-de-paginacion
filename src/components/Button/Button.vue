@@ -1,10 +1,10 @@
 <template>
-    <button class="btn" :class="{ 'expand' : expand }"
+    <button class="btn" :class="{ 'expand' : expand, 'round': round}"
         :style="style"
         @click="onClickFunction"
     >
         <Icon v-if="icon" class="btn-icon"
-            :type="icon"
+            :icon="icon"
             :color="color"
             :width="size"
             :height="size"
@@ -46,6 +46,11 @@ export default defineComponent({
             required: false,
             default: false,
         },
+        round: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
         onClickFunction: {
             type: Function,
             required: true,
@@ -54,8 +59,10 @@ export default defineComponent({
     setup(props) {
         const style = computed(() => {
             return {
-                // width: (props.expand) ? `${ props.size * 2}px` : 'auto',
-                // height: (props.expand) ? `${ props.size * 2}px` : 'auto',
+                //@ts-ignore
+                width: (props.expand) ? `${ props.size * 2}px` : 'auto',
+                //@ts-ignore
+                height: (props.expand) ? `${ props.size * 2}px` : 'auto',
                 fontSize: `${ props.size}px`,
                 color: props.color,
             }

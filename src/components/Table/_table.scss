@@ -1,0 +1,33 @@
+@import '../../styles/base';
+
+.table {
+    @include flex-column-center;
+    max-height: calc(100vh - 100px);
+    
+    &__title {
+        margin-bottom: 8px;
+        text-align: center;
+    }
+    
+    &__content { 
+        border-radius: 16px;
+        @include flex-column-center;
+        justify-content: flex-start;
+        padding: 8px 4px;
+        width: 100%;
+        height: 100%;
+        @include outer-shadow(3px, 6px);
+        // min-height: 100px;
+        overflow-y: auto;
+        @include scroll-bar;
+    }
+
+    &__item {
+        border-radius: 16px;
+        width: 90%;
+        height: 42px;
+        @include inner-shadow(3px, 6px);
+        padding: 6px;
+        margin-bottom: 8px;
+    }
+}

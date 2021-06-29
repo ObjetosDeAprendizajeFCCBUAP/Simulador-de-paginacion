@@ -12,3 +12,12 @@
         font-size: 16px;
     }
 }
+
+
+.processes-list {
+    @include flex-row-center;
+
+    & .process-item {
+        margin: 8px;
+    }
+}

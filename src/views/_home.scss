@@ -1,0 +1,43 @@
+@import '../styles/base';
+
+.home {
+
+    & main {
+        @include flex-column-center;
+        justify-content: space-around;
+        margin-top: calc(30vh);
+    }
+
+    &__title {
+        padding: 16px 32px;
+        border-radius: 16px;
+        margin-bottom: 32px;
+        @include outer-shadow(4px, 10px);
+    }
+
+    width: 100vw;
+    height: 100vh;
+    @include flex-column-center;
+    justify-content: space-between;
+
+    & .btn-sett {
+        margin-right: 26px;
+        margin-bottom: 26px;
+    }
+}
+
+.title {
+    &__fac {
+        font-size: 28px;
+    }
+
+    &__sub {
+        font-size: 80px;
+    }
+}
+
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}

@@ -32,6 +32,8 @@ export default defineComponent({
         emit('update:modelValue', val);
       },
     };
+
+    // @ts-ignore
     const input_val = computed(value_handler);
 
     return {

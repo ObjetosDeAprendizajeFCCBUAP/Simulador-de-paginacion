@@ -1,0 +1,27 @@
+@import '../../styles/base';
+
+.horiz-table {
+
+	@include color;
+
+	&__content {
+		@include color;
+		@include flex-row-center;
+		@include outer-shadow(4px, 6px);
+		border-radius: 16px;
+		padding: 8px 16px;
+		margin: 8px 0;
+
+		& .table-slot {
+			width: 32px;
+			height: 32px;
+			@include inner-shadow(2px, 3px);
+			border-radius: 8px;
+			margin: 0 4px;
+			padding: 8px;
+			@include flex-row-center
+		}
+	}
+
+
+}

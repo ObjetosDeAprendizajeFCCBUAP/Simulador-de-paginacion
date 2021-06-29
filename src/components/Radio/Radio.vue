@@ -32,6 +32,8 @@ export default defineComponent({
         }
     
         const sele = ref('');
+
+        // @ts-ignore
         const selectedVal = computed(valueHandler);
         return {
             selectedVal,

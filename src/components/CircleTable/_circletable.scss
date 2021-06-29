@@ -1,0 +1,31 @@
+@import '../../styles/base';
+
+.circle-table {
+    position: relative;
+    width: 1px;
+    height: 1px;
+}
+
+.circle-container {
+    @include color;
+    @include outer-shadow(4px, 10px);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+
+    
+}
+
+.circle-slot {
+        width: 100px;
+        height: 40px;
+        border-radius: 8px;
+        @include color;
+        @include inner-shadow(4px, 6px);
+        top: calc(50% - 20px);
+        left: calc(50% - 50px);
+        transform: translate(50%, 50%);
+        position: absolute;
+    }

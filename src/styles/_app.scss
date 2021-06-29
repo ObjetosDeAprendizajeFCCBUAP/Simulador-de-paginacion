@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 @import './variables';
 @import './base';
+
 
 *,
 *::before,
@@ -11,12 +14,14 @@
     &:focus {
         outline: none;
     }
+    font-family: 'Poppins', sans-serif;
 }
 
 html{
     @include flex-row-center;
     @include color;
     min-height: 100vh;
+    font-size: 20px;
 }
 
 .main {

@@ -1,8 +1,8 @@
 <template>
-    <div :style="iconStyle">
+    <div>
         <svg
             :width="`${width}px`"
-            preserveAspectRadio="xMidYMid meet"
+            preserveAspectRatio="xMidYMid meet"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
         >
@@ -14,15 +14,16 @@
 </template>
 
 <script lang="ts">
+/* @ts-ignore */
 import { computed, defineComponent } from 'vue';
 import ICONS from './icons';
 
 export default defineComponent({
     props: {
-        type: {
-            type: String,
+        icon: {
+            type: String as () => string,
             requierd: true,
-            default: 'code',
+            default: () => 'code',
         },
         color: {
             type: String,
@@ -42,14 +43,15 @@ export default defineComponent({
     },
     setup(props) {
         const iconStyle = computed(() => {
-            return {
+            return props.width && props.height ? {
                 width: `${ props.width }px`,
                 height: `${ props.height }px`,
-            }
+            } : '';
         });
 
         const path = computed((): string => {
-            return ICONS[props.type];
+            // @ts-ignore
+            return ICONS[props.icon];
         })
         return {
             iconStyle,
