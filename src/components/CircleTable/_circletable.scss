@@ -19,13 +19,33 @@
 }
 
 .circle-slot {
-        width: 100px;
-        height: 40px;
-        border-radius: 8px;
-        @include color;
-        @include inner-shadow(4px, 6px);
-        top: calc(50% - 20px);
-        left: calc(50% - 50px);
-        transform: translate(50%, 50%);
+    @include flex-column-center;
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    @include color;
+    @include inner-shadow(4px, 6px);
+    top: calc(50% - 20px);
+    left: calc(50% - 50px);
+    transform: translate(50%, 50%);
+    position: absolute;
+    text-align: center;
+    vertical-align: center;
+}
+
+.circle-arrow {
+    position: absolute;
+    top: 4;
+    left: 4px;
+    @include color;
+    transform-origin: center top;
+
+    &:before {
         position: absolute;
+        height: 100%;
+        width: 8px;
+        content: '';
+        border-radius: 1em;
+        @include inner-shadow(4px, 6px);
     }
+}

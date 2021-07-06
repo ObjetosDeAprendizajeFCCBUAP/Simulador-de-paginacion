@@ -5,8 +5,8 @@
     border-radius: 16px;
     padding: .5em 2em;
     @include flex-column-center;
-    @include color;
-    @include outer-shadow(6px, 10px);
+    // @include color;
+    // @include outer-shadow(6px, 10px);
 
     & span {
         font-size: 16px;

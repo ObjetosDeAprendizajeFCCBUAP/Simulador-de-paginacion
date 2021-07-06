@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import ProcessForm from '@/views/ProcessForm.vue';
+import FormFifo from '@/views/FormFifo.vue';
 import Fifo from '@/views/Fifo.vue';
 import Test from '@/views/Test.vue';
 import Clock from '@/views/Clock.vue';
@@ -17,6 +18,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Form',
     component: ProcessForm,
     props: true
+  },
+  {
+    path: '/form-fifo',
+    name: 'FormFifo',
+    component: FormFifo,
   },
   {
     path: '/fifo',

@@ -1,0 +1,61 @@
+@import '../../styles/base';
+
+input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+  }
+  &::-moz-range-thumb {
+    border: none;
+  }
+}
+
+.range-input {
+  width: 400px;
+  height: 60px;
+  padding: 20px;
+  border-radius: 10px;
+  @include color;
+  @include outer-shadow(2px, 8px);
+  //   box-shadow: -2px -2px 8px white, 2px 2px 8px rgba(black, 0.5);
+  //   background: $primary;
+  
+  @mixin track-style {
+	  display: flex;
+	  align-items: center;
+	  height: 20px;
+	  border-radius: 10px;
+	  @include inner-shadow(2px, 8px);
+    // box-shadow: inset -2px -2px 8px white, inset 2px 2px 8px rgba(black, 0.5);
+  }
+
+  @mixin thumb-style {
+    position: relative;
+    top: -50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+	@include outer-shadow(3px, 5px);
+    // box-shadow: -1px -1px 2px white, 1px 1px 2px rgba(black, 0.3);
+	@include color;
+    // background-color: $primary;
+    // background-image: linear-gradient(-45deg, rgba(white, 0.8), transparent);
+  }
+  &::-webkit-slider-runnable-track {
+    @include track-style;
+  }
+  &::-webkit-slider-thumb {
+    @include thumb-style;
+  }
+  &::-moz-range-track {
+    @include track-style;
+  }
+  &::-moz-range-thumb {
+    @include thumb-style;
+  }
+}

@@ -1,0 +1,28 @@
+@import '../../styles/base';
+
+.modal {
+	position: absolute;
+	left: 50%;
+	bottom: 50%;
+	transform: translate(-50%, 50%);
+
+	&__container {
+		@include flex-column-center;
+		@include color;
+		@include outer-shadow(5px, 10px);
+		padding: 1em 2em;
+		border-radius: 2em;
+	}
+
+	&__header {
+		@include flex-row-center;
+		width: 100%;
+		justify-content: flex-end;
+		padding-bottom: 8px;
+		border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+	}
+
+	&__content {
+		@include flex-row-center;
+	}
+}

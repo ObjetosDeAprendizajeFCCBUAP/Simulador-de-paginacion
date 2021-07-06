@@ -1,21 +1,24 @@
 <template>
     <div>
         <CircleTable 
-            :slots="6"
+            :pointTo="4"
         />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import CircleTable from '@/components/CircleTable/CircleTable.vue';
 
 export default defineComponent({
     components: {
         CircleTable,
     },
-    setup () {
+    setup() {
+        const rangevalue = ref();
+
         return {
+            rangevalue,
         }
     }
 })

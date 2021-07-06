@@ -22,7 +22,7 @@
                 />
                 <HorizontalTable class="fifo-ref-queue"
                     :listIterable="['1', '2']"
-                    :title="'Ventana de trabajo'"
+                    :title="'Conjunto de trabajo'"
                 />
             </div>
             <div class="fifo__main__lat">
@@ -34,20 +34,20 @@
             </div>
         </div>
         <div class="fifo__buttons">
-            <Button 
+            <!-- <Button 
                 :onClickFunction="nextStep"
                 :icon="'prev'"
                 :round="true"
                 :expand="true"
                 :size="24"
-            />
-            <Button 
+            /> -->
+            <!-- <Button 
                 :onClickFunction="nextStep"
                 :icon="'play'"
                 :round="true"
                 :expand="true"
                 :size="24"
-            />
+            /> -->
             <Button 
                 :onClickFunction="nextStep"
                 :icon="'next'"

@@ -11,7 +11,7 @@
   @include outer-shadow(3px, 6px);
   min-width: 200px;
   cursor: pointer;
-  animation: test .8s ease-in;
+  // animation: test .8s ease-in;
 
   & .title {
     @include flex-row-between;
@@ -41,8 +41,8 @@
   border-radius: 8px;
   padding: 8px;
   margin: 8px;
+  width: auto;
   min-width: 200px;
-  max-height:200px;
   overflow-y: auto;
   z-index: 100;
   @include color;

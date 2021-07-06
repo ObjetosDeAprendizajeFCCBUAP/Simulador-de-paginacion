@@ -2,6 +2,7 @@
     <div class="circle-table">
         <div class="circle-container" :style="computedSize">
         </div>            
+        <div class="circle-arrow" :style="computedStyle"></div>
         <div class="circle-slot" v-for="i in slots" :key="i" 
             :style="calcTranslate(i)">
             {{i}}
@@ -28,7 +29,12 @@ export default defineComponent({
             type: Number,
             required: false,
             default: 90,
-        }
+        },
+        pointTo: {
+            type: Number,
+            required: false,
+            default: 1,
+        },
     },
     setup(props) {
 
@@ -60,6 +66,10 @@ export default defineComponent({
             return `transform: translate(${xCoord}px, ${yCoord}px);`
         }
 
+        const toDeg = (deg: number) => {
+            return (deg * 180) / Math.PI;
+        }
+
         const computedSize = computed(() => {
             return {
                 //@ts-ignore
@@ -69,9 +79,19 @@ export default defineComponent({
             }
         });
 
+        const computedStyle = computed(() => {
+            return {
+                // @ts-ignore
+                height: `calc(${props.radius}px / 2)`,
+                // @ts-ignore
+                transform: `rotateZ(${toDeg(calcDegrees(props.pointTo) + calcDegrees(20))}deg`
+            }
+        });
+
         return {
             calcTranslate,
             computedSize,
+            computedStyle,
         }
     }
 })
