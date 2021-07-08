@@ -13,7 +13,7 @@
 				<div class="modal__header" aria-hidden="true">
 					<button
 						aria-label="close"
-						class="btn"
+						class="btn expand"
 						@click.prevent="close"
 					>x
 						<svg class=""

@@ -1,50 +1,65 @@
 <template>
     <div class="form-fifo">
-		<div class="process-section">
-			<div class="section-title">Procesos de entrada</div>
-			<div class="processes-list" v-if="inputProcesses.length > 0">
-				<ProcessCard v-for="process in inputProcesses" class="process-item"
-					:key="process.pid"
-					:process="process"
-				/>
-			</div>
-			<div class="processes-list" v-else>
-				Sin procesos de entrada
-			</div>
-			<Button
-				:icon="'plus'"
-				:size="32"
-				:onClickFunction="openModal"
-				:round="true"
-				:expand="true"
-			/>
-		</div>
-		<div class="options-section">
-			<div class="section-title">Opciones</div>
-			<div class="options">
-				<div class="opt">
-					<p># de marcos: {{physical_size}}</p>
-					<input type="range"
-						class="range-input"
-						min="3"
-						max="8"
-						step="1"
-						v-model="physical_size"
-					>
-				</div>
-				<div class="opt">
-					<p># de marcos: {{virtual_size}}</p>
-					<input type="range"
-						class="range-input"
-						min="5"
-						max="16"
-						step="1"
-						v-model="virtual_size"
-					>
-				</div>
-			</div>
-		</div>
-		<router-link to="/" class="btn">Iniciar</router-link>
+		<div class="blur-content" :class="{ blur : showModal}">
+            <div class="process-section">
+                <div class="section-title">Procesos de entrada</div>
+                <div class="processes-list" v-if="inputProcesses.length > 0">
+                    <ProcessCard v-for="process in inputProcesses" class="process-item"
+                        :key="process.pid"
+                        :process="process"
+                    />
+                </div>
+                <div class="processes-list" v-else>
+                    Sin procesos de entrada
+                </div>
+                <Button
+                    :icon="'plus'"
+                    :size="32"
+                    :onClickFunction="openModal"
+                    :round="true"
+                    :expand="true"
+                />
+            </div>
+            <div class="options-section">
+                <div class="section-title">Opciones</div>
+                <div class="options">
+                    <div class="opt">
+                        <p># de marcos: {{physical_size}}</p>
+                        <input type="range"
+                            class="range-input"
+                            min="3"
+                            max="8"
+                            step="1"
+                            v-model.number="physical_size"
+                        >
+                    </div>
+                    <div class="opt">
+                        <p># de paginas: {{virtual_size}}</p>
+                        <input type="range"
+                            class="range-input"
+                            min="5"
+                            max="16"
+                            step="1"
+                            v-model.number="virtual_size"
+                        >
+                    </div>
+                    <div class="opt" v-if="view == 'Set'">
+                        <p>Conjunto de trabajo: {{working_set_size}}</p>
+                        <input type="range"
+                            class="range-input"
+                            min="2"
+                            :max="virtual_size - 2"
+                            step="1"
+                            v-model.number="working_set_size"
+                        >
+                    </div>
+                </div>
+            </div>
+            <router-link class="btn start-section" :to="{
+                        name: view,
+                        params: { inputArray : JSON.stringify(inputProcesses) }
+                    }">Iniciar</router-link>
+        </div>
         <Modal :showing="showModal" 
             @update:showing="showModal"
             @close="closeModal()"
@@ -97,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import Modal from '@/components/Modal/Modal.vue';
 import Button from '@/components/Button/Button.vue';
 import Dropdown from '@/components/Dropdown/Dropdown.vue';
@@ -117,7 +132,13 @@ export default defineComponent({
         Radio,
 		ProcessCard,
     },
-    setup() {
+    props: {
+        algorithm: {
+            type: String,
+            required: true,
+        }
+    },
+    setup(props) {
 
         const showModal = ref(false);
 
@@ -141,6 +162,8 @@ export default defineComponent({
 
 		const physical_size = ref(4);
 		const virtual_size = ref(6);
+
+        const working_set_size = ref(3);
 
         function addProcess() {
             pid_list.value = pid_list.value.filter((e) => e !== selected_pid.value);
@@ -178,6 +201,21 @@ export default defineComponent({
 			closeModal();
         }
 
+        const view = ref('');
+        onMounted(() => {
+            switch(props.algorithm){
+                case 'fifo':
+                    view.value = 'Fifo'
+                    break;
+                case 'ws':
+                    view.value = 'Set'
+                    break;
+                case 'wsclock':
+                    view.value = 'Clock'
+                    break;
+                default:
+            }
+        });
 
         return {
             showModal,
@@ -196,6 +234,9 @@ export default defineComponent({
 
 			physical_size,
 			virtual_size,
+            working_set_size,
+
+            view,
             
         }
     }
@@ -204,4 +245,5 @@ export default defineComponent({
 
 <style lang="scss">
 @import './formfifo';
+@import './views';
 </style>

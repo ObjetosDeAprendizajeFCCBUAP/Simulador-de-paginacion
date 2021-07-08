@@ -1,7 +1,7 @@
 import Process from './process';
 import RoundRobin from './rr_scheduler';   
 
-interface IProcessInput {
+export interface IProcessInput {
   pid : string;
   arrival_time : number;
   total_time : number;
@@ -11,7 +11,7 @@ interface IProcessInput {
 
 type sortedProcDic = { [index: number]: IProcessInput[]};
 
-class Loader {
+export default class Loader {
 
   input: IProcessInput[];
   sortedProcesses: sortedProcDic;
@@ -39,5 +39,3 @@ class Loader {
   }
 
 }
-
-export { IProcessInput, Loader }

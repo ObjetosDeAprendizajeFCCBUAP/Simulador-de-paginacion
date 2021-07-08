@@ -44,6 +44,17 @@
     }
 }
 
+
+.blur { 
+  filter: blur(4px);
+  transition: filter .3s ease-in-out;
+
+  &-content {
+    @include flex-column-center;
+    width: 100%;
+  }
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   -moz-appearance: none;

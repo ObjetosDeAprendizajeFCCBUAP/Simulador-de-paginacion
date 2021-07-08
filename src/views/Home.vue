@@ -31,6 +31,7 @@
       <Button class="btn-sett"
         :icon="'settings'"
         :round="true"
+        :expand="true"
         :size="24"
         :onClickFunction="() => {}"
       />

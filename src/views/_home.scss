@@ -20,6 +20,17 @@
     @include flex-column-center;
     justify-content: space-between;
 
+    & .btns {
+        @include flex-row-center;
+        width: 100%;
+            // justify-content: space-aro;
+
+        & .btn {
+            margin: 0 1em 0 1em;
+        }
+
+    }
+
     & .btn-sett {
         margin-right: 26px;
         margin-bottom: 26px;

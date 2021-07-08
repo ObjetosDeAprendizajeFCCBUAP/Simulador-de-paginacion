@@ -1,4 +1,5 @@
 import CPU from './cpu';
+import PhysicalMemory from './physical_memory';
 
 
 const cpu = new CPU([]);
@@ -6,6 +7,24 @@ const cpu = new CPU([]);
 for(let i = 0; i < 20; i++)
     if(!cpu.next())
        break; 
+
+
+// const physical = new PhysicalMemory(5);
+// physical.loadPage('A', 0);
+// physical.loadPage('A', 1);
+// physical.loadPage('A', 2);
+// physical.loadPage('A', 3);
+// physical.loadPage('A', 4);
+
+// physical.refProcessPage('A', 3);
+
+// console.log(physical.toString());
+
+// physical.releaseFrame('A', 2);
+// console.log(physical.isFull());
+// physical.loadPage('A', 7);
+// console.log(physical.isFull());
+// console.log(physical.toString());
 
 
 // CPU  pseudocode workflow      
