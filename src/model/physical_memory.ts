@@ -35,9 +35,10 @@ export default class PhysicalMemory {
 
     public getFrame(pid: string, page: number): number{
         for(let i = 0; i < this.size; i++)
-            if(this.frames[i].frame.process_pid === pid && 
-                this.frames[i].frame.process_page === page)
-                return i;
+            if(!this.frames[i].free)
+                if(this.frames[i].frame.process_pid === pid && 
+                    this.frames[i].frame.process_page === page)
+                    return i;
         return -1;
     }
 

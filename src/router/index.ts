@@ -40,6 +40,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/wsclock',
     name: 'Clock',
     component: Clock,
+    props: true,
   },
   {
     path: '/test',

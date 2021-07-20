@@ -44,20 +44,47 @@
                         >
                     </div>
                     <div class="opt" v-if="view == 'Set'">
-                        <p>Conjunto de trabajo: {{working_set_size}}</p>
+                        <p>Conjunto de trabajo: {{opt1}}</p>
                         <input type="range"
                             class="range-input"
                             min="2"
                             :max="virtual_size - 2"
                             step="1"
-                            v-model.number="working_set_size"
+                            v-model.number="opt1"
+                        >
+                    </div>
+                    <div class="opt" v-if="view == 'Clock'">
+                        <p>Tasa de refresco: {{opt1}}</p>
+                        <input type="range"
+                            class="range-input"
+                            min="2"
+                            max="5"
+                            step="1"
+                            v-model.number="opt1"
+                        >
+                    </div>
+                    <div class="opt" v-if="view == 'Clock'">
+                        <p>T: {{opt2}}</p>
+                        <input type="range"
+                            class="range-input"
+                            min="2"
+                            max="5"
+                            step="1"
+                            v-model.number="opt2"
                         >
                     </div>
                 </div>
             </div>
             <router-link class="btn start-section" :to="{
                         name: view,
-                        params: { inputArray : JSON.stringify(inputProcesses) }
+                        params: { 
+                            inputArray : JSON.stringify(inputProcesses), 
+                            virtualSize: virtual_size, 
+                            physicalSize: physical_size,
+                            algorithm: view,
+                            opt1: opt1,
+                            opt2: opt2,
+                        }
                     }">Iniciar</router-link>
         </div>
         <Modal :showing="showModal" 
@@ -163,7 +190,8 @@ export default defineComponent({
 		const physical_size = ref(4);
 		const virtual_size = ref(6);
 
-        const working_set_size = ref(3);
+        const opt1 = ref(3);
+        const opt2 = ref(3);
 
         function addProcess() {
             pid_list.value = pid_list.value.filter((e) => e !== selected_pid.value);
@@ -192,6 +220,7 @@ export default defineComponent({
                     references: refs_arr,
                 });
             }
+		console.log(inputProcesses.value);
             selected_pid.value = '';
             arrival_time.value = 0;
             pages.value = 1;
@@ -234,7 +263,8 @@ export default defineComponent({
 
 			physical_size,
 			virtual_size,
-            working_set_size,
+            opt1,
+            opt2,
 
             view,
             

@@ -1,12 +1,15 @@
 // eslint-disable-file no-use-before-define
+import FIFOR from './fifo';
 import FIFO from './fifo_page_replace';
 import JobQueue from './job_queue';
 import Loader, { IProcessInput } from './loader';
+import MMU from './mmu';
 import PhysicalMemory from './physical_memory';
 import Process from './process';
 import RoundRobin from './rr_scheduler';
 import VirtualMemory from './virtual_memory';
-import WorkingSet from './working_set_replace';
+import WorkingSetR from './working_set';
+import WSClock from './wsclock';
 
 export default class CPU {
 
@@ -29,6 +32,8 @@ export default class CPU {
     loader: Loader;
 
     quantum: number;
+
+    mmu: MMU
 
     input : IProcessInput[] =  [
         {
@@ -87,8 +92,8 @@ export default class CPU {
     // ];
 
     constructor(processes: IProcessInput[], physical_size: number, virtual_size: number, 
-            quantum: number, algorithm: string){
-        this.loader = new Loader(this.inputTest);
+            quantum: number, algorithm: string, opt1?: number, opt2?: number){
+        this.loader = new Loader(processes);
         this.scheduler = new RoundRobin(new JobQueue(), this.quantum);
         this.computed_process = this.scheduler.nextProcessToCompute();
         this.ended = false;
@@ -100,13 +105,19 @@ export default class CPU {
         this.quantum = quantum;
 
         this.physical = new PhysicalMemory(physical_size);
-        this.virtual = new VirtualMemory(virtual_size, 12, 'mb');
+        this.virtual = new VirtualMemory(4, virtual_size, 'mb');
 
         this.total_processes = 0;
         this.completed_processes = 0;
 
         // this.fifo = new FIFO(this.virtual, this.physical);
-        this.fifo = new WorkingSet(this.virtual, this.physical, 2);
+        // this.fifo = new WorkingSet(this.virtual, this.physical, 2);
+        if(algorithm === 'Fifo')
+            this.mmu = new FIFOR(this.virtual, this.physical);
+        else if(algorithm === 'Set')
+            this.mmu = new WorkingSetR(this.virtual, this.physical, opt1);
+        else 
+            this.mmu = new WSClock(this.virtual, this.physical, opt1, opt2);
 
         this.input = processes.length > 0 ? processes.sort((a, b) => {
             return b.arrival_time - a.arrival_time; }) : this.input;
@@ -122,7 +133,8 @@ export default class CPU {
                 const temp = new Process(e.pid, e.total_time, e.pages, e.references)
                 this.scheduler.registerProcess(temp);
                 //Agregar alguna condicion para que muestre error si el proceso no cabe en memoria
-                this.fifo.loadProcess(temp);
+                // this.fifo.loadProcess(temp);
+                this.mmu.loadProcess(temp);
             });
         } 
         if(this.computed_process === null)
@@ -134,7 +146,8 @@ export default class CPU {
             if(this.hasFinishedTasks()) return false;
         }
         this.current_reference = this.computed_process.nextReference()
-        this.fifo.referenceProcessPage(this.computed_process.PID, this.current_reference);
+        // this.fifo.referenceProcessPage(this.computed_process.PID, this.current_reference);
+        this.mmu.referenceProcess(this.computed_process.PID, this.current_reference);
         console.log(`${this.computed_process.PID}-${this.current_reference}`);
         this.computed_time++;
         return true;
@@ -142,7 +155,7 @@ export default class CPU {
 
     private deleteProcess() : void {
         this.completed_processes++;
-        let pid = this.computed_process.PID;
+        const pid = this.computed_process.PID;
         this.virtual.deleteProcess(pid);
         this.scheduler.deleteProcess(pid);
         //this.mmu.deleteProcess(pid);
@@ -150,8 +163,8 @@ export default class CPU {
     }
 
     public hasFinishedTasks() : boolean {
-        let hasComputed = this.computed_process === null;
-        let hasInWait = this.completed_processes === this.loader.input.length ;
+        const hasComputed = this.computed_process === null;
+        const hasInWait = this.completed_processes === this.loader.input.length ;
         return hasComputed && hasInWait;
         // return false;
     }

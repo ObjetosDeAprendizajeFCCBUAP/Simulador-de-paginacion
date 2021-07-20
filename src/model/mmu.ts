@@ -1,19 +1,27 @@
-import process from "./process";
+import PhysicalMemory from "./physical_memory";
+import Process from "./process";
+import VirtualMemory from "./virtual_memory";
 
-export default class MMU {
-    referencePage(process: process) {
-        throw new Error("Method not implemented.");
-    }
+export default interface MMU {
 
-    
+    physical: PhysicalMemory;
+    virtual: VirtualMemory;
 
-    constructor(){
-        console.log('holis');
-    }
+    virtual_time?: number;
 
+    // Working set algorithm
+    working_set?: string[];
 
-    public deleteProcess(pid: string) {
-        
-    }
+    // WSClock
+    refresh_rate?: number;
+    interrupt?: number;
+    oldest_frame?: number;
+
+    tau?: number;
+
+    loadProcess(process: Process): void;
+    referenceProcess(pid: string, page: number): boolean;
+    update?(index: number, pid: string, page: number): void;
+    contdown?(): void;
 
 }

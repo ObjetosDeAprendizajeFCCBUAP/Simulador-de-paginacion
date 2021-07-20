@@ -18,18 +18,18 @@
                 <Table class="fifo-physic-mem"
                     :title="'Memoria fisica'"
                     :listIterable="physicalMemory"
-                    :slots="8"
+                    :slots="physicalSize"
                 />
-                <HorizontalTable class="fifo-ref-queue"
+                <!-- <HorizontalTable class="fifo-ref-queue"
                     :listIterable="['1', '2']"
                     :title="'Apuntadores de memoria'"
-                />
+                /> -->
             </div>
             <div class="fifo__main__lat">
                 <Table 
                     :listIterable="virtualMemory"
                     :title="'Memoria virtual'"
-                    :slots="16"
+                    :slots="virtualSize"
                 />
             </div>
         </div>
@@ -64,7 +64,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue';
 import Button from '@/components/Button/Button.vue';
 import InfoPanel from '@/components/InfoPanel/InfoPanel.vue';
 import Table from '@/components/Table/Table.vue';
-import HorizontalTable from '@/components/HorizontalTable/HorizontalTable.vue';
+// import HorizontalTable from '@/components/HorizontalTable/HorizontalTable.vue';
 
 import CPU from '@/model/cpu';
 
@@ -73,12 +73,30 @@ export default defineComponent({
         Button,
         InfoPanel,
         Table,
-        HorizontalTable,
+        // HorizontalTable,
     },
     props: {
         inputArray: {
             type: String,
             required: true
+        },
+        virtualSize: {
+            type: Number,
+            required: true,
+        },
+        physicalSize: {
+            type: Number,
+            rquired: true
+        },
+        opt1: {
+            type: Number,
+            required: false,
+            default: 0,
+        },
+        opt2: {
+            type: Number,
+            required: false,
+            default: 0,
         }
     },
     setup(props) {
@@ -104,12 +122,12 @@ export default defineComponent({
 
         const virtualMemory = computed((): string[] => {
             if(cpu.value === undefined) return [];
-            return cpu.value.virtual.pages.map((x) => (!x.free ? `${x.page.process_pid}-${x.page.process_page}` : '#'));
+            return cpu.value.virtual.pages.map((x) => (!x.free ? `${x.page.process_pid}-${x.page.process_page}` : ' '));
         });
 
         const physicalMemory = computed((): string[] => {
             if(cpu.value === undefined) return [];
-            return cpu.value.fifo.physical.frames.map((x) => (!x.free ? `${x.frame.process_pid}-${x.frame.process_page}` : '#'));
+            return cpu.value.physical.frames.map((x) => (!x.free ? `${x.frame.process_pid}-${x.frame.process_page}` : ' '));
         });
 
         const nextStep = () => {
@@ -118,7 +136,8 @@ export default defineComponent({
 
         function initCPU(){
             //@ts-ignore
-            cpu.value = new CPU(JSON.parse(props.inputArray));
+            cpu.value = new CPU(JSON.parse(props.inputArray), props.physicalSize, props.virtualSize, 
+                                4, 'Fifo', props.opt1, props.opt2);
             console.log('___', cpu.value);
         }       
          

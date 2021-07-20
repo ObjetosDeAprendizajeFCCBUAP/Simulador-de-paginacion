@@ -2,11 +2,15 @@
     <div class="circle-table">
         <div class="circle-container" :style="computedSize">
         </div>            
-        <div class="circle-arrow" :style="computedStyle"></div>
-        <div class="circle-slot" v-for="i in slots" :key="i" 
-            :style="calcTranslate(i)">
+        <!-- <div class="circle-arrow" :style="computedStyle"></div> -->
+        <div class="circle-slot" v-for="(i, index) in iterList" :key="index" 
+            :style="calcTranslate(index)">
             {{i}}
         </div>
+        <!-- <div class="circle-slot" v-for="i in freeSlots" :key="slots - i" 
+            :style="calcTranslate(slots - freeSlots() - i)">
+            #
+        </div> -->
     </div>
 </template>
 
@@ -35,6 +39,10 @@ export default defineComponent({
             required: false,
             default: 1,
         },
+        iterableList: {
+            type: Array as () => string[],
+            required: true,
+        }
     },
     setup(props) {
 
@@ -42,7 +50,7 @@ export default defineComponent({
 
         onMounted(() => {
             //@ts-ignore
-            _offset.value = (-90 - (360 / props.slots));
+            _offset.value = (180 - (360 / props.slots));
         })
 
         const calcDegrees = (index: number): number => {
@@ -50,7 +58,7 @@ export default defineComponent({
             // return ((360 / props.slots) * index + props.offset) * (Math.PI / 180);
             console.log(_offset.value);
             //@ts-ignore
-            return ((360 / props.slots) * index + _offset.value) * (Math.PI / 180);
+            return ((360 / props.slots) * index - 90) * (Math.PI / 180);
         }
         
         const calcCoords = (index: number) => {
@@ -88,10 +96,29 @@ export default defineComponent({
             }
         });
 
+        const freeSlots = () => {
+            //@ts-ignore 
+            return props.slots - props.iterableList.length;
+        }
+
+        const iterList = computed(()  => {
+            const iter: string[] = [];
+            // @ts-ignore
+            for(let i = 0; i < props.iterableList.length; i++)
+            //@ts-ignore
+                iter.push(props.iterableList[i]);
+            const limit = freeSlots();
+            for(let i = 0; i < limit; i++)
+                iter.push(' ');
+            return iter;
+        })
+
         return {
             calcTranslate,
             computedSize,
             computedStyle,
+            freeSlots,
+            iterList,
         }
     }
 })

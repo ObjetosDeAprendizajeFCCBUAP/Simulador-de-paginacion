@@ -27,12 +27,14 @@ export default class VirtualMemory {
         }
     }
 
-    public loadProcess(process : Process) : boolean{
+    public loadProcess(process : Process) : boolean {
         if(process.number_of_pages > this.free_p) return false;
         let process_pages = 0;
+        console.log('!!@@', process.number_of_pages);
         for(let i = 0; i < this.pages.length; i++){
-            if(process_pages == process.number_of_pages) break;
+            if(process_pages === process.number_of_pages) break;
             if(this.pages[i].free){
+                console.log('^^^^', process_pages);
                 this.pages[i].page = new Page(i, 4, 'kb', process.PID, process_pages++);
                 this.pages[i].free = false;
             }
@@ -42,7 +44,7 @@ export default class VirtualMemory {
 
     public isFull() : boolean { return this.free_p === 0; }
 
-    public deleteProcess(pid: string) {
+    public deleteProcess(pid: string): void {
         for(let i = 0; i < this.pages.length; i++)
             if(!this.pages[i].free) 
                 if(this.pages[i].page.process_pid === pid)
@@ -57,7 +59,7 @@ export default class VirtualMemory {
     }
 
     public toString() : string {
-        let cad : string = "";
+        let cad = "";
         this.pages.map(x => {
             if(x.free)
                 cad += " # |"

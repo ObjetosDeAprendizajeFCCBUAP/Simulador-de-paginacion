@@ -18,10 +18,10 @@
                 <Table class="fifo-physic-mem"
                     :title="'Memoria fisica'"
                     :listIterable="physicalMemory"
-                    :slots="8"
+                    :slots="physicalSize"
                 />
                 <HorizontalTable class="fifo-ref-queue"
-                    :listIterable="['1', '2']"
+                    :listIterable="workingSet"
                     :title="'Conjunto de trabajo'"
                 />
             </div>
@@ -29,7 +29,7 @@
                 <Table 
                     :listIterable="virtualMemory"
                     :title="'Memoria virtual'"
-                    :slots="16"
+                    :slots="virtualSize"
                 />
             </div>
         </div>
@@ -79,7 +79,25 @@ export default defineComponent({
         inputArray: {
             type: String,
             required: true
-        }
+        },
+        virtualSize: {
+            type: Number,
+            required: true,
+        },
+        physicalSize: {
+            type: Number,
+            rquired: true
+        },
+        opt1: {
+            type: Number,
+            required: false,
+            default: 0,
+        },
+        opt2: {
+            type: Number,
+            required: false,
+            default: 0,
+        },
     },
     setup(props) {
         const lista: string[] = [];
@@ -104,12 +122,17 @@ export default defineComponent({
 
         const virtualMemory = computed((): string[] => {
             if(cpu.value === undefined) return [];
-            return cpu.value.virtual.pages.map((x) => (!x.free ? `${x.page.process_pid}-${x.page.process_page}` : '#'));
+            return cpu.value.virtual.pages.map((x) => (!x.free ? `${x.page.process_pid}-${x.page.process_page}` : ' '));
         });
 
         const physicalMemory = computed((): string[] => {
             if(cpu.value === undefined) return [];
-            return cpu.value.fifo.physical.frames.map((x) => (!x.free ? `${x.frame.process_pid}-${x.frame.process_page}` : '#'));
+            return cpu.value.physical.frames.map((x) => (!x.free ? `${x.frame.process_pid}-${x.frame.process_page}` : ' '));
+        });
+
+        const workingSet = computed((): string[] => {
+            if(cpu.value === undefined) return [];
+            return cpu.value.mmu.working_set;
         });
 
         const nextStep = () => {
@@ -118,7 +141,9 @@ export default defineComponent({
 
         function initCPU(){
             //@ts-ignore
-            cpu.value = new CPU(JSON.parse(props.inputArray));
+            cpu.value = new CPU(JSON.parse(props.inputArray), props.physicalSize, props.virtualSize, 
+                                4, 'Set', props.opt1, props.opt2);
+            console.log('___', cpu.value);
             console.log('___', cpu.value);
         }       
          
@@ -133,6 +158,7 @@ export default defineComponent({
             processQueue,
             virtualMemory,
             physicalMemory,
+            workingSet,
         }
     }
 });
