@@ -19,9 +19,11 @@ export default interface MMU {
 
     tau?: number;
 
-    loadProcess(process: Process): void;
+    loadProcess(process: Process): boolean;
     referenceProcess(pid: string, page: number): boolean;
+    deleteProcess(pid: string): void;
     update?(index: number, pid: string, page: number): void;
     contdown?(): void;
+    getOldest?(): number;
 
 }

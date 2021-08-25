@@ -9,7 +9,6 @@ export default class WorkingSetR implements MMU {
 	physical: PhysicalMemory;
 	capacity: number;
 	working_set: string[];
-
 	
 	constructor(virtual: VirtualMemory, physical: PhysicalMemory, window_size: number){
 		this.virtual = virtual;
@@ -20,8 +19,13 @@ export default class WorkingSetR implements MMU {
 		console.log(`!!!!Se creo conjunto de trabajo con capacidad de ${window_size}`);
 	}
 	
-	public loadProcess(process: Process): void {
-		this.virtual.loadProcess(process);
+	public loadProcess(process: Process): boolean {
+		return this.virtual.loadProcess(process);
+	}
+
+	deleteProcess(pid: string): void {
+		this.virtual.deleteProcess(pid);
+		this.physical.deleteProcess(pid);
 	}
 	
 	public referenceProcess(pid: string, page: number): boolean {

@@ -1,6 +1,3 @@
-$bg-color: #ecf0f3;
-$fg-color: #292d32;
-
 :root {
     --bg-color: #ecf0f3;
     --fg-color: #292d32;
@@ -8,6 +5,8 @@ $fg-color: #292d32;
     --shadow-strength: 0.3;
     --light-color: 255, 255, 255;
     --light-strength: 0.8;
+    --error-color: #db1919;
+    --into-color: #98c949;
 }
 
 .dark {

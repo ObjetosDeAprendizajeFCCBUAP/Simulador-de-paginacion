@@ -4,12 +4,13 @@
       type="text"
       :placeholder="placeholder"
       v-model="input_val"
+      :style="`color: ${settings.getters.getColor()}`"
     >
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, inject } from 'vue';
 
 export default defineComponent({
   props: {
@@ -24,6 +25,8 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const settings = inject('settings');
+
     const value_handler = {
       get() {
         return props.value;
@@ -37,6 +40,7 @@ export default defineComponent({
     const input_val = computed(value_handler);
 
     return {
+      settings,
       input_val,
     };
   },

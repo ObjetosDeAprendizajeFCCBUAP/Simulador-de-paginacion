@@ -21,12 +21,15 @@ html{
     @include flex-row-center;
     @include color;
     min-height: 100vh;
-    font-size: 20px;
+    overflow: hidden;
+    // font-size: 20px;
 }
 
 .main {
     @include flex-column-center;
     @include color;
+    overflow-y: auto;
+    @include scroll-bar;
     min-width: 100vw;
     min-height: 100vh;
     transition: .5s ease-in-out;

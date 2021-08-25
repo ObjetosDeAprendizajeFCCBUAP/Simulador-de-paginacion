@@ -17,6 +17,7 @@
     font-size: 16px;
     @include inner-shadow(3px, 6px);
     transition: all .3s ease-in-out;
+    text-align: center;
 
     &:focus{
       outline: none;

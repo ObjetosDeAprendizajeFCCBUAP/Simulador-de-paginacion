@@ -1,29 +1,33 @@
 <template>
-    <div>
-        <CircleTable 
-            :pointTo="4"
+    <div class="test-container">
+        <Table
+            :listIterable="['1', '2', '3', '4']"
+            :selected="2"
         />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import CircleTable from '@/components/CircleTable/CircleTable.vue';
+import { defineComponent } from "vue";
+import Table from "@/components/Table/Table.vue";
 
 export default defineComponent({
     components: {
-        CircleTable,
+        Table,
     },
     setup() {
-        const rangevalue = ref();
-
         return {
-            rangevalue,
         }
     }
 })
 </script>
 
 <style scoped>
-
+.test-container {
+    width: 70%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 </style>

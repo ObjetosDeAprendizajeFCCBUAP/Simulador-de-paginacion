@@ -8,65 +8,64 @@
 			leave-from-class="opacity-100"
 			leave-to-class="opacity-0"
 		> -->
-		<div v-show="showing" class="modal">
-			<div class="modal__container">
-				<div class="modal__header" aria-hidden="true">
-					<button
-						class="btn expand round btn-close"
-						aria-label="close"
-						@click.prevent="close"
-						:style="{ color: settings.getters.getColor() }"
-					>
-					<Icon
-						:icon="'close'"
-						:height="settings.getters.getFontSize()"
-						:width="settings.getters.getFontSize()"
-					/>
-					</button>
+		<div v-show="showing" class="info-modal">
+			<div class="info-modal__container">
+				<div class="info-modal__title" :style="computedTitleColor" aria-hidden="true">
+					{{type}}
 				</div>
 				<div class="modal__content">
 					<slot></slot>
 				</div>
+				<button class="btn expand" @click.prevent="close">Aceptar</button>
 			</div>
 		</div>
 		<!-- </transition> -->
-
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import Icon from '@/components/Icon/Icon.vue';
+import { computed, defineComponent } from 'vue';
 
 export default defineComponent({
-	components: {
-		Icon,
-	},
 	props: {
 		showing: {
 			type: Boolean,
 			required: true,
 			default: false,
+		},
+		type: {
+			type: String,
+			required: false,
+			defualt: 'info'
 		}
 	},
-	setup(_, { emit }) {
+	setup(props, { emit }) {
 
-		const settings = inject('settings');
+		const computedTitleColor = computed(() => {
+			let color = '';
+			switch(props.type){
+				case 'info': 
+					color = 'green'; break;
+				case 'error':
+					color = 'red'; break;
+			}
+			return `color: ${color}`;
+		});
 
 		const close = () => {
 			console.log('Modal closed');
 			emit('update:showing', false);
 			emit('close');
-			console.log('Que pasa')
 		}
+
 		return {
-			settings,
-			close
+			close,
+			computedTitleColor,
 		}
 	}
 })
 </script>
 
 <style lang="scss">
-@import './modal';
+@import './infomodal';
 </style>

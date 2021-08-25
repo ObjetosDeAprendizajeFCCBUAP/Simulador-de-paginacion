@@ -31,18 +31,23 @@ export default class WSClock implements MMU {
 		console.log(`!!!Se creo wsclock con rate: ${refresh_rate} y con tau: ${tau}`);
 	}
 	
-	public loadProcess(process: Process){
-		this.virtual.loadProcess(process);
+	public loadProcess(process: Process): boolean {
+		return this.virtual.loadProcess(process);
 	}
 
-	public tick(){
+	deleteProcess(pid: string): void {
+		this.virtual.deleteProcess(pid);
+		this.physical.deleteProcess(pid);
+	}
+
+	public tick(): void {
 		this.interrupt = this.interrupt + 1 % this.refresh;
 		if(this.interrupt == 0)
 			for(let i = 0; i < this.physical.size; i++)
 				this.physical.frames[i].frame.reference(false);
 	}
 	
-	public referenceProcess(pid: string, page: number){
+	public referenceProcess(pid: string, page: number): boolean {
 		let fault = false;
 		this.virtual_time++;
 		let frameLocation = this.physical.getFrame(pid, page);
@@ -90,7 +95,7 @@ export default class WSClock implements MMU {
 		return fault;
 	}
 
-	public update(index: number, pid: string, page: number){
+	public update(index: number, pid: string, page: number) : void {
 		this.physical.updateFrame(index, pid, page, this.virtual_time);
 	}
 }

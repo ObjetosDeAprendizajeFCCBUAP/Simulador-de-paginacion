@@ -1,0 +1,30 @@
+@import '../../styles/base';
+
+
+.info-modal {
+	position: absolute;
+	left: 50%;
+	bottom: 50%;
+	transform: translate(-50%, 50%);
+	max-width: 40%;
+
+	&__container {@include color;
+		@include outer-shadow(4px, 6px);
+		padding: 1em 2em;
+		border-radius: 1em;
+		@include flex-column-center;
+		width: 100%;
+	}
+
+	&__title {
+		width: 90%;
+		text-transform: capitalize;
+		// color: red;
+		border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+		// margin-bottom: 1em;
+	}
+
+	&__content {
+		margin: 1em 0;
+	}
+}

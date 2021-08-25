@@ -1,7 +1,10 @@
 @import '../../styles/base';
+@import '../../styles/animations';
 
 .table {
     @include flex-column-center;
+    // max-width: 80%;
+    width: 12em;
     max-height: calc(100vh - 100px);
     
     &__title {
@@ -23,11 +26,17 @@
     }
 
     &__item {
+        @include flex-row-center;
         border-radius: 16px;
         width: 90%;
-        height: 42px;
+        // height: 42px;
+        height: 2.8em;
         @include inner-shadow(3px, 6px);
         padding: 6px;
         margin-bottom: 8px;
+        // &.used {
+        //     // color: red;
+        //     // animation: appear 1s ease-in-out;
+        // }
     }
 }

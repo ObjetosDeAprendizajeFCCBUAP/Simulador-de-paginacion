@@ -20,13 +20,15 @@
 
 .circle-slot {
     @include flex-column-center;
-    width: 100px;
-    height: 40px;
+    // width: 100px;
+    width: 6em;
+    // height: 40px;
+    height: 2.5em;
     border-radius: 8px;
     @include color;
     @include inner-shadow(4px, 6px);
-    top: calc(50% - 20px);
-    left: calc(50% - 50px);
+    top: calc(50% - 1em);
+    left: calc(50% - 3em);
     transform: translate(50%, 50%);
     position: absolute;
     text-align: center;

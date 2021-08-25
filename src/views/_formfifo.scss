@@ -3,13 +3,28 @@
 .form-fifo {
 	@include flex-column-center;
 	@include color;
+  // justify-content: space-between;
 	width: 90%;
+  // overflow-y: auto;
 	
 	& .process-section,
 	& .options-section {
 		@include flex-column-center;
+    height: auto;
 		width: 100%;		
 	}	
+
+  & .back {
+    width: 95%;
+    @include flex-row-center;
+    justify-content: flex-start;
+
+  }
+}
+
+.back-home {
+  @include flex-column-center;
+  padding: 1em;
 }
 
 .options {
@@ -25,7 +40,8 @@
 }
 
 .section-title {
-	font-size: 28px;
+	// font-size: 28px;
+  font-size: 1.6em;
 	width: 80%;
 	border-bottom: 3px solid rgba(0, 0, 0, 0.2);
 	margin-bottom: .5em;
@@ -33,14 +49,17 @@
 }
 
 .processes-list {
+  width: 70%;
+  height: 20%;
 	@include flex-row-center;
+  justify-content: space-around;
 	@include inner-shadow(3px, 10px);
 	margin-bottom: 2em;
 	padding: 1em 1em .5em 1em;
 	border-radius: 1em;
 
     & .process-item {
-		margin: .5em 1em;
+		  margin: .5em 1em;
     }
 }
 
@@ -71,8 +90,10 @@ input[type="range"] {
 }
 
 .range-input {
-  width: 300px;
-  height: 45px;
+  // width: 300px;
+  width: 20em;
+  // height: 45px;
+  height: 3em;
   padding: 20px;
   border-radius: 10px;
   @include color;
@@ -89,8 +110,10 @@ input[type="range"] {
   @mixin thumb-style {
     position: relative;
     top: -20%;
-    width: 32px;
-    height: 32px;
+    // width: 32px;
+    // height: 32px;
+    width: 2.2em;
+    height: 2.2em;
     border-radius: 50%;
 	@include outer-shadow(3px, 4px);
 	@include color;

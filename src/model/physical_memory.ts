@@ -26,6 +26,13 @@ export default class PhysicalMemory {
        }
     }
 
+    public deleteProcess(pid: string): void {
+        for(let i = 0; i < this.frames.length; i++)
+            if(!this.frames[i].free) 
+                if(this.frames[i].frame.process_pid === pid)
+                    this.frames[i] = {free : true, frame : null};
+    }
+
     public updateFrame(index: number, pid: string, page: number, _age?: number) : void{
         this.frames[index].frame.process_pid = pid;
         this.frames[index].frame.process_page = page;

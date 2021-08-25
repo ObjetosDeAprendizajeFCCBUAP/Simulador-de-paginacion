@@ -24,6 +24,7 @@ export default class CPU {
 
     total_processes     : number;
     completed_processes : number;
+    faults: number;
 
     virtual : VirtualMemory;
     physical: PhysicalMemory;
@@ -33,63 +34,9 @@ export default class CPU {
 
     quantum: number;
 
+    error_message: string;
+
     mmu: MMU
-
-    input : IProcessInput[] =  [
-        {
-            pid: 'A',
-            arrival_time: 0,
-            total_time : 5,
-            pages: 2,
-        },
-        {
-            pid: 'B',
-            arrival_time: 4,
-            total_time : 10,
-            pages: 2,
-        },
-        {
-            pid: 'C',
-            arrival_time: 1,
-            total_time : 3,
-            pages: 2,
-        },
-        {
-            pid: 'D',
-            arrival_time: 3,
-            total_time : 5,
-            pages: 2,
-        },
-    ];
-
-    inputTest : IProcessInput[] =  [
-        {
-            pid: 'A',
-            arrival_time: 0,
-            total_time : 10,
-            pages: 6,
-            references: [1, 2, 3, 4, 2, 5, 6, 2, 7, 9, 2, 1, 7, 2, 3, 6, 2, 3, 1],
-        },
-    ]
-    //     {
-    //         pid: 'B',
-    //         arrival_time: 0,
-    //         total_time : 10,
-    //         pages: 2,
-    //     },
-    //     {
-    //         pid: 'C',
-    //         arrival_time: 4,
-    //         total_time : 3,
-    //         pages: 2,
-    //     },
-    //     {
-    //         pid: 'D',
-    //         arrival_time: 4,
-    //         total_time : 5,
-    //         pages: 2,
-    //     },
-    // ];
 
     constructor(processes: IProcessInput[], physical_size: number, virtual_size: number, 
             quantum: number, algorithm: string, opt1?: number, opt2?: number){
@@ -98,9 +45,6 @@ export default class CPU {
         this.computed_process = this.scheduler.nextProcessToCompute();
         this.ended = false;
         this.computed_time = 0;
-        this.input = this.input.sort((a, b) => {
-            return b.arrival_time - a.arrival_time;
-        });
 
         this.quantum = quantum;
 
@@ -109,6 +53,9 @@ export default class CPU {
 
         this.total_processes = 0;
         this.completed_processes = 0;
+        this.faults = 0;
+
+        this.error_message = ''
 
         // this.fifo = new FIFO(this.virtual, this.physical);
         // this.fifo = new WorkingSet(this.virtual, this.physical, 2);
@@ -118,12 +65,10 @@ export default class CPU {
             this.mmu = new WorkingSetR(this.virtual, this.physical, opt1);
         else 
             this.mmu = new WSClock(this.virtual, this.physical, opt1, opt2);
-
-        this.input = processes.length > 0 ? processes.sort((a, b) => {
-            return b.arrival_time - a.arrival_time; }) : this.input;
     }
 
     public next(): boolean {
+        this.error_message = '';
         console.log(`[TIME]> ${this.computed_time}`);
         const nextToArrive = this.loader.tick(this.computed_time);
         //Cargar los procesos 
@@ -134,7 +79,7 @@ export default class CPU {
                 this.scheduler.registerProcess(temp);
                 //Agregar alguna condicion para que muestre error si el proceso no cabe en memoria
                 // this.fifo.loadProcess(temp);
-                this.mmu.loadProcess(temp);
+                if(!this.mmu.loadProcess(temp)) this.error_message = `No se pudo cargar el proceso ${temp.PID} porque la memoria esta llena`;
             });
         } 
         if(this.computed_process === null)
@@ -147,7 +92,7 @@ export default class CPU {
         }
         this.current_reference = this.computed_process.nextReference()
         // this.fifo.referenceProcessPage(this.computed_process.PID, this.current_reference);
-        this.mmu.referenceProcess(this.computed_process.PID, this.current_reference);
+        if(this.mmu.referenceProcess(this.computed_process.PID, this.current_reference)) this.faults++;
         console.log(`${this.computed_process.PID}-${this.current_reference}`);
         this.computed_time++;
         return true;
@@ -156,7 +101,8 @@ export default class CPU {
     private deleteProcess() : void {
         this.completed_processes++;
         const pid = this.computed_process.PID;
-        this.virtual.deleteProcess(pid);
+        // this.virtual.deleteProcess(pid);
+        this.mmu.deleteProcess(pid);
         this.scheduler.deleteProcess(pid);
         //this.mmu.deleteProcess(pid);
         console.log(`Se elimino el proceso ${pid}`)
@@ -168,5 +114,7 @@ export default class CPU {
         return hasComputed && hasInWait;
         // return false;
     }
+
+    public getError() { return this.error_message; }
 
 }

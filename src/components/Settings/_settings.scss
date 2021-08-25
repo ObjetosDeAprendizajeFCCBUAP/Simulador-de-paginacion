@@ -1,0 +1,69 @@
+@import '../../styles/base';
+
+.settings { 
+
+	@include flex-column-center;
+	justify-content: flex-start;
+	padding: 1em .5em;
+	// align-items: baseline;
+	width: 90%;
+	height: 100%;
+	overflow-y: auto;
+	@include scroll-bar;
+	transition: all .3s ease-in-out;
+
+	& .sett-title {
+		width: 100%;
+		display: flex;
+		justify-content: flex-start;
+		font-size: 2em;
+		border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+	}
+
+	& .sett-opt {
+		margin-top: 1em;
+		width: 90%;
+		@include flex-column-center;
+		align-items: flex-start;
+
+		& .sett-opt-title {
+			font-size: 1.2em;
+			margin-bottom: .5em;
+		}
+
+		& .sett-opt-content {
+			@include flex-row-center;
+			width: 100%;
+			justify-content: space-between;
+		}
+	}
+}
+
+.github-link {
+	width: 30%;
+	text-decoration: none;
+	@include color;
+	@include flex-row-center;
+	justify-content: flex-start;
+	
+	& span {
+		margin-right: .5em;
+	}
+}
+
+input[type=radio].color-btn {
+	width: 2.5em;
+	height: 2.5em;
+	appearance: none;
+	-webkit-appearance: none;
+	outline: none;
+	cursor: pointer;
+	transition: all .3s ease-in-out;
+	// background-color: red;
+	border-radius: 50%;
+	@include outer-shadow(3px, 3px);
+
+	&:checked {
+		@include inner-shadow(3px, 3px);
+	}
+}

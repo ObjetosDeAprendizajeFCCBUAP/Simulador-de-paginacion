@@ -2,13 +2,16 @@
     <div class="radio-input">
         <div class="element" v-for="(option, index) in optionsList" :key="index">
             <input type="radio" :name="option" :id="option" :value="option" v-model="selectedVal">
-            <label :for="option">{{ option }}</label>
+            <label 
+                :for="option"
+                :style="option === selectedVal ? `color: ${settings.getters.getColor()}`  : `color: inhered`"
+            >{{ option }}</label>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, inject } from 'vue';
 
 export default defineComponent({
     props: {
@@ -22,6 +25,8 @@ export default defineComponent({
         }
     },
     setup(props, { emit }) {
+        const settings = inject('settings');
+
         const valueHandler = {
             get() {
                 return props.value;
@@ -36,6 +41,7 @@ export default defineComponent({
         // @ts-ignore
         const selectedVal = computed(valueHandler);
         return {
+            settings,
             selectedVal,
             sele
         }

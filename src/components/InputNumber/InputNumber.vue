@@ -1,13 +1,13 @@
 <template>
   <div class="input-num">
     <div class="decrement" @click="decrement" :class="{inactive: !canDecrement }">-</div>
-    <input class="input-field" type="text" v-model.number="input_val"/>
+    <input class="input-field" type="text" v-model.number="input_val" :style="{ color: settings.getters.getColor() }"/>
     <div class="increment" @click="increment" :class="{inactive: !canIncrement}">+</div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, inject } from 'vue';
 
 export default defineComponent({
   props: {
@@ -29,6 +29,8 @@ export default defineComponent({
     },
   },
   setup (props, { emit }) {
+    const settings  = inject('settings');
+
     const valueHandler = {
       get() {
         return props.value.valueOf();
@@ -68,6 +70,7 @@ export default defineComponent({
     }
 
     return {
+      settings,
       input_val,
       increment,
       decrement,

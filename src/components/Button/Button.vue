@@ -2,6 +2,7 @@
     <button class="btn" :class="{ 'expand' : expand, 'round': round}"
         :style="style"
         @click="onClickFunction"
+        :disabled="active"
     >
         <Icon v-if="icon" class="btn-icon"
             :icon="icon"
@@ -54,6 +55,11 @@ export default defineComponent({
         onClickFunction: {
             type: Function,
             required: true,
+        },
+        active: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     setup(props) {

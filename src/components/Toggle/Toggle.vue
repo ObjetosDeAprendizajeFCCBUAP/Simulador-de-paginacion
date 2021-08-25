@@ -1,5 +1,5 @@
 <template>
-    <div class="theme-switch" :style="{ dark : store.getters.getTheme }">
+    <div class="theme-switch">
         <input type="checkbox" id="switch" class="toggle">
         <label for="switch" class="toggle" @click="toggle">Toggle</label>
     </div>
@@ -8,7 +8,7 @@
 <script lang="ts">
 //To do: 
 //[ ] Hacer el computed para el color del switch
-import { defineComponent, inject } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
     props: {
@@ -30,15 +30,14 @@ export default defineComponent({
         }
     },
     setup(props, { emit }) {
-        const store = inject('store');
 
         function toggle() {
-            if(props.function){
-                props.function();
-            }
+            // if(props.function){
+            //     props.function();
+            // }
             emit('update:modelValue', !props.value);
         }
-        return { toggle, store, };
+        return { toggle };
     },
 })
 </script>

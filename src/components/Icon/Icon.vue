@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="iconStyle">
         <svg
             :width="`${width}px`"
             preserveAspectRatio="xMidYMid meet"

@@ -1,6 +1,7 @@
 @import '../../styles/base';
 
 input[type="range"] {
+  transition: all .3s ease-in-out;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -21,7 +22,7 @@ input[type="range"] {
   padding: 20px;
   border-radius: 10px;
   @include color;
-  @include outer-shadow(2px, 8px);
+  // @include outer-shadow(2px, 8px);
   //   box-shadow: -2px -2px 8px white, 2px 2px 8px rgba(black, 0.5);
   //   background: $primary;
   

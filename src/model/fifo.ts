@@ -20,8 +20,13 @@ export default class FIFOR implements MMU {
 		console.log(`Virtual: ${virtual} | Fisica: ${physical}`);
 	}
 
-	loadProcess(process: process): void {
-		this.virtual.loadProcess(process);
+	loadProcess(process: process): boolean {
+		return this.virtual.loadProcess(process);
+	}
+
+	deleteProcess(pid: string): void{
+		this.virtual.deleteProcess(pid);
+		this.physical.deleteProcess(pid);
 	}
 
 	referenceProcess(pid: string, page: number): boolean {
@@ -43,5 +48,9 @@ export default class FIFOR implements MMU {
         console.log(`#${this.physical}`);
         console.log(`#${this.virtual}`);
 		return fault;
+	}
+
+	getOldest(): number {
+		return this.oldest_frame;
 	}
 }

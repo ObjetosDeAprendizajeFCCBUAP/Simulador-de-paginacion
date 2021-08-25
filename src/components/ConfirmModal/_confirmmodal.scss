@@ -1,0 +1,30 @@
+@import '../../styles/base';
+
+.info-modal {
+	position: absolute;
+	left: 50%;
+	bottom: 50%;
+	transform: translate(-50%, 50%);
+	max-width: 40%;
+	height: auto;
+	
+	&__container {@include color;
+		@include outer-shadow(4px, 6px);
+		padding: 1em 2em;
+		border-radius: 1em;
+		@include flex-column-center;
+		width: 100%;
+	}
+	
+	.confirm-btns {
+		margin-top: 1em;
+		@include flex-row-center;
+		width: 100%;
+		font-size: .8em;
+		justify-content: space-around;
+	}
+
+	&__content {
+		margin-bottom: 1em;
+	}
+}

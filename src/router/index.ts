@@ -17,7 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/form',
     name: 'Form',
     component: Form,
-    props: true
+    props: true,
+    beforeEnter: (t, f, n) => {
+      if(t.params.algorithm) n();
+      else n({name: 'Home'})
+    },
   },
   // {
   //   path: '/form-fifo',

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="title" @click="toggleMenu">
+    <div class="title" @click="toggleMenu" :style="{ color: settings.getters.getColor() }">
       <div class="selected-option">
         {{showOption}}
       </div>
@@ -13,7 +13,8 @@
       <div class="menu-item"
           v-for="(item, index) in iterable"
           :key="index"
-          @click="updateOption(item)">
+          @click="updateOption(item)"
+          :style="item === showOption ? `color: ${settings.getters.getColor()}`  : `color: inhered`">
         {{ item }}
       </div>
     </div>
@@ -39,7 +40,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const store = inject('store');
+    const settings = inject('settings');
     const show_menu = ref(false);
     const selected_option = ref('');
 
@@ -62,7 +63,7 @@ export default defineComponent({
       toggleMenu,
       updateOption,
       showOption,
-      store,
+      settings,
     };
   },
 });
