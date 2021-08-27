@@ -59,7 +59,7 @@
                         <input type="range"
                             class="range-input"
                             min="2"
-                            :max="virtual_size - 2"
+                            :max="physical_size - 2"
                             step="1"
                             v-model.number="opt1"
                         >

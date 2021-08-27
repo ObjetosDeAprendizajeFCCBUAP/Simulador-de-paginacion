@@ -65,9 +65,9 @@
 		<div class="sett-title">Info</div>
 		<div class="sett-opt">
 			<a class="github-link" target="_blank"
-				href="https://github.com/EdgarCM19"
+				href="https://github.com/ObjetosDeAprendizajeFCCBUAP"
 			>
-				<span>Github</span>
+				<span>Repositorio de Github</span>
 				<Icon 
 					:icon="'github'"
 					:width="settings.getters.getFontSize() * 1.2"
