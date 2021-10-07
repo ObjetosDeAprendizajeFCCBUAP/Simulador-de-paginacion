@@ -1,56 +1,78 @@
+/**
+ * @author Edgar Castro Martinez
+ */
+
 import MMU from "./mmu";
-import process from "./process";
+import Process from "./process";
 import VirtualMemory from "./virtual_memory";
 import PhysicalMemory from "./physical_memory";
 
-export default class FIFOR implements MMU {
+export default class FIFO implements MMU {
 
-	physical: PhysicalMemory;
-	virtual: VirtualMemory;
+    physical: PhysicalMemory;
+    virtual: VirtualMemory;
 
-	oldest_frame: number;
+    oldest_frame: number;
 
-	constructor(virtual: VirtualMemory, physical: PhysicalMemory){
-		this.virtual = virtual;
-		this.physical = physical;
+    /**
+     * Creates an FIFO page replacement algorithm instance for the memory management 
+     * @constructor
+     * @param { VirtualMemory } virtual - An instance of virtual memory
+     * @param { PhysicalMemory } physical - An instance of physical memory
+     */
+    constructor(virtual: VirtualMemory, physical: PhysicalMemory){
+        this.virtual 		= virtual;
+        this.physical 		= physical;
 
-		this.oldest_frame = 0;
+        this.oldest_frame 	= 0;
+    }
 
-		console.log('Se creo FIFO');
-		console.log(`Virtual: ${virtual} | Fisica: ${physical}`);
-	}
+    /**
+     * Load a process to memory
+     * @param { Process } process - The process to load
+     * @returns { boolean } True if the process load successfully, else otherwise 
+     */
+    loadProcess(process: Process): boolean {
+        return this.virtual.loadProcess(process);
+    }
 
-	loadProcess(process: process): boolean {
-		return this.virtual.loadProcess(process);
-	}
+    /**
+     * Delete a process from virtual and physical memory.
+     * @param { string } pid - The pid of the process to be deleted
+     */
+    deleteProcess(pid: string): void{
+        this.virtual.deleteProcess(pid);
+        this.physical.deleteProcess(pid);
+    }
 
-	deleteProcess(pid: string): void{
-		this.virtual.deleteProcess(pid);
-		this.physical.deleteProcess(pid);
-	}
+    /**
+     * Make a reference to specific process page
+     * @param { string } pid - Process PID
+     * @param { number } page - Process page
+     * @returns { boolean } - return true if exist page fault
+     */
+    referenceProcess(pid: string, page: number): boolean {
+        if(this.physical.isFull()){
+            if(!this.physical.hasProcessPage(pid, page)){
+                this.physical.releaseFrame(null, null, this.oldest_frame % this.physical.size);
+                this.oldest_frame++;
+                this.physical.loadPage(pid, page);
+            } else return false;
+        } else {
+            if(!this.physical.hasProcessPage(pid, page))
+                this.physical.loadPage(pid, page);
+            else
+                return false;
+        }
+        return false;
+    }
 
-	referenceProcess(pid: string, page: number): boolean {
-		let fault = true;
-		if(this.physical.isFull()){
-			if(this.physical.hasProcessPage(pid, page)){
-				this.physical.releaseFrame(null, null, this.oldest_frame % this.physical.size);
-				this.oldest_frame++;
-				this.physical.loadPage(pid, page);
-				// this.update(this.oldest_frame % this.physical.size, pid, page);
-			} else fault = false;
-		} else {
-			if(!this.physical.hasProcessPage(pid, page))
-				this.physical.loadPage(pid, page);
-			else 
-				fault = false;
-		}
-		console.log(`Referencia a ${pid}/${page} con fallo de pagina: ${fault}`);
-        console.log(`#${this.physical}`);
-        console.log(`#${this.virtual}`);
-		return fault;
-	}
+    /**
+     * Gets the oldest frame in physical memory
+     * @returns { number } the number of frame in physical memory
+     */
+    getOldest(): number {
+        return this.oldest_frame;
+    }
 
-	getOldest(): number {
-		return this.oldest_frame;
-	}
 }

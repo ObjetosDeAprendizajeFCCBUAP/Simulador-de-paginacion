@@ -1,6 +1,10 @@
 // eslint-disable-file no-use-before-define
-import FIFOR from './fifo';
-import FIFO from './fifo_page_replace';
+
+/**
+ * @author Edgar Castro Martinez
+ */
+
+import FIFO from './fifo';
 import JobQueue from './job_queue';
 import Loader, { IProcessInput } from './loader';
 import MMU from './mmu';
@@ -13,98 +17,125 @@ import WSClock from './wsclock';
 
 export default class CPU {
 
+    // Scheduler
+    loader              : Loader;
+    quantum             : number;
     scheduler           : RoundRobin;
+
+    //MMU
+    virtual             : VirtualMemory;
+    physical            : PhysicalMemory;
+    mmu                 : MMU
+
+    //Variables for control and info.
+    computed_time       : number;
     computed_process    : Process;
     current_reference   : number;
-    ended               : boolean;
-    computed_time       : number;
-
-    next_proc_t_arrival : number;
-    next_proc           : Process;
-
     total_processes     : number;
     completed_processes : number;
-    faults: number;
+    ended               : boolean;
+    faults              : number
+    error_message       : string;
 
-    virtual : VirtualMemory;
-    physical: PhysicalMemory;
-
-    fifo : FIFO;
-    loader: Loader;
-
-    quantum: number;
-
-    error_message: string;
-
-    mmu: MMU
-
-    constructor(processes: IProcessInput[], physical_size: number, virtual_size: number, 
+    /**
+     * Creates an instance of CPU
+     * @constructor
+     * @param { IProcessInput[] } processes - List of proceeses to be computed
+     * @param { number } physical_size - Number of pages physical memory
+     * @param { number } virtual_size - Size of virtual memory
+     * @param { number } quantum - Quantum unit
+     * @param { string } algorithm - Name of page replacement agorithm to be executed.
+     * @param { number } opt1 - For working set algorithm, is the size of working set window. For WSClock is the refresh time
+     * @param { number } opt2 - Only for WSClock, is tau unit.
+     */
+    constructor(processes: IProcessInput[], physical_size: number, virtual_size: number,
             quantum: number, algorithm: string, opt1?: number, opt2?: number){
-        this.loader = new Loader(processes);
-        this.scheduler = new RoundRobin(new JobQueue(), this.quantum);
-        this.computed_process = this.scheduler.nextProcessToCompute();
-        this.ended = false;
-        this.computed_time = 0;
 
-        this.quantum = quantum;
+        this.loader              = new Loader(processes);
+        this.quantum             = quantum;
+        this.scheduler           = new RoundRobin(new JobQueue(), this.quantum);
 
-        this.physical = new PhysicalMemory(physical_size);
-        this.virtual = new VirtualMemory(4, virtual_size, 'mb');
-
-        this.total_processes = 0;
-        this.completed_processes = 0;
-        this.faults = 0;
-
-        this.error_message = ''
-
-        // this.fifo = new FIFO(this.virtual, this.physical);
-        // this.fifo = new WorkingSet(this.virtual, this.physical, 2);
+        this.physical            = new PhysicalMemory(physical_size);
+        this.virtual             = new VirtualMemory(4, virtual_size, 'mb');
         if(algorithm === 'Fifo')
-            this.mmu = new FIFOR(this.virtual, this.physical);
+            this.mmu             = new FIFO(this.virtual, this.physical);
         else if(algorithm === 'Set')
-            this.mmu = new WorkingSetR(this.virtual, this.physical, opt1);
-        else 
-            this.mmu = new WSClock(this.virtual, this.physical, opt1, opt2);
+            this.mmu             = new WorkingSetR(this.virtual, this.physical, opt1);
+        else
+            this.mmu             = new WSClock(this.virtual, this.physical, opt1, opt2);
+
+        this.computed_time       = 0;
+        this.computed_process    = this.scheduler.nextProcessToCompute();
+        this.current_reference   = -1;
+        this.total_processes     = this.loader.input.length;
+        this.completed_processes = 0;
+        this.ended               = false;
+        this.faults              = 0;
+        this.error_message       = '';
     }
 
-    public next(): boolean {
+    // public next(): boolean {
+    //     this.error_message = '';
+    //     const nextToArrive = this.loader.tick(this.computed_time);
+    //     //Load new process
+    //     if(nextToArrive.length > 0){
+    //         nextToArrive.forEach(e => {
+    //             const temp = new Process(e.pid, e.total_time, e.pages, e.references)
+    //             this.scheduler.registerProcess(temp);
+    //             if(!this.mmu.loadProcess(temp)) this.error_message =
+    //                     `No se pudo cargar el proceso ${temp.PID} porque la memoria esta llena`;
+    //         });
+    //     }
+    //     //Chose a process
+    //     if(this.computed_process === null)
+    //         this.computed_process = this.scheduler.nextProcessToCompute();
+    //     if(!this.scheduler.tick()){
+    //         if(this.computed_process.hasFinished()) this.deleteProcess();
+    //         this.computed_process = this.scheduler.nextProcessToCompute();
+    //         if(this.hasFinishedTasks()) return false;
+    //     }
+    //     this.current_reference = this.computed_process.nextReference()
+    //     if(this.mmu.referenceProcess(this.computed_process.PID, this.current_reference)) this.faults++;
+    //     this.computed_time++;
+    //     return true;
+    // }
+
+
+    public next(): string {
+        if(this.hasFinishedTasks()) return 'F';
         this.error_message = '';
-        console.log(`[TIME]> ${this.computed_time}`);
         const nextToArrive = this.loader.tick(this.computed_time);
-        //Cargar los procesos 
+        //Load new process
         if(nextToArrive.length > 0){
-            console.log('Se cargaron procesos');
             nextToArrive.forEach(e => {
                 const temp = new Process(e.pid, e.total_time, e.pages, e.references)
                 this.scheduler.registerProcess(temp);
-                //Agregar alguna condicion para que muestre error si el proceso no cabe en memoria
-                // this.fifo.loadProcess(temp);
-                if(!this.mmu.loadProcess(temp)) this.error_message = `No se pudo cargar el proceso ${temp.PID} porque la memoria esta llena`;
+                if(!this.mmu.loadProcess(temp)) this.error_message =
+                        `No se pudo cargar el proceso ${temp.PID} porque la memoria esta llena`;
             });
-        } 
+        }
         if(this.computed_process === null)
             this.computed_process = this.scheduler.nextProcessToCompute();
-        //if(this.hasFinishedTasks()) return false;
-        if(!this.scheduler.tick()){
-            if(this.computed_process.hasFinished()) this.deleteProcess();
+            if(this.computed_process === null && this.completed_processes !== this.loader.input.length) {
+                this.computed_time++;
+                return 'W';
+            }
+        if(this.scheduler.tick())
             this.computed_process = this.scheduler.nextProcessToCompute();
-            if(this.hasFinishedTasks()) return false;
-        }
         this.current_reference = this.computed_process.nextReference()
-        // this.fifo.referenceProcessPage(this.computed_process.PID, this.current_reference);
         if(this.mmu.referenceProcess(this.computed_process.PID, this.current_reference)) this.faults++;
-        console.log(`${this.computed_process.PID}-${this.current_reference}`);
+        if(this.computed_process.hasFinished())
+            this.deleteProcess();
         this.computed_time++;
-        return true;
+        return 'R';
     }
+
 
     private deleteProcess() : void {
         this.completed_processes++;
         const pid = this.computed_process.PID;
-        // this.virtual.deleteProcess(pid);
         this.mmu.deleteProcess(pid);
         this.scheduler.deleteProcess(pid);
-        //this.mmu.deleteProcess(pid);
         console.log(`Se elimino el proceso ${pid}`)
     }
 
@@ -112,9 +143,8 @@ export default class CPU {
         const hasComputed = this.computed_process === null;
         const hasInWait = this.completed_processes === this.loader.input.length ;
         return hasComputed && hasInWait;
-        // return false;
     }
 
-    public getError() { return this.error_message; }
+    public getError(): string { return this.error_message; }
 
 }

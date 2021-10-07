@@ -4,30 +4,49 @@ import Process from './process';
 import MMU from './mmu';
 
 export default class WorkingSetR implements MMU {
-	
-	virtual: VirtualMemory;	
-	physical: PhysicalMemory;
-	capacity: number;
-	working_set: string[];
-	
-	constructor(virtual: VirtualMemory, physical: PhysicalMemory, window_size: number){
-		this.virtual = virtual;
-		this.physical = physical;
-		this.working_set = [];
-		this.capacity = window_size;
 
-		console.log(`!!!!Se creo conjunto de trabajo con capacidad de ${window_size}`);
+	virtual			: VirtualMemory;
+	physical		: PhysicalMemory;
+	capacity		: number;
+	working_set		: string[];
+
+	/**
+	 * Creates a working set algorithm
+	 * @param virtual - An instance of virtual memory
+	 * @param physical - An instance of physical memory
+	 * @param window_size - The number of slots in working set
+	 */
+	constructor(virtual: VirtualMemory, physical: PhysicalMemory, window_size: number){
+		this.virtual 		= virtual;
+		this.physical 		= physical;
+		this.working_set 	= [];
+		this.capacity 		= window_size;
 	}
-	
+
+	/**
+	 * Load a process to virtual memory
+	 * @param process - The process to be loaded
+	 * @returns true if the process can be loaded, false otherwise
+	 */
 	public loadProcess(process: Process): boolean {
 		return this.virtual.loadProcess(process);
 	}
 
-	deleteProcess(pid: string): void {
+	/**
+	 * Removes a process form virtual and physical memory
+	 * @param pid - The PID of the process to be removed
+	 */
+	public deleteProcess(pid: string): void {
 		this.virtual.deleteProcess(pid);
 		this.physical.deleteProcess(pid);
 	}
-	
+
+	/**
+	 * Reference a process based on working set algorithm
+	 * @param pid - The PID of the process to be referenced
+	 * @param page - The page of the process to be referenced
+	 * @returns true if exist page fault, false otherwise
+	 */
 	public referenceProcess(pid: string, page: number): boolean {
 		let fault = false;
 		const referenced = `${pid}-${page}`;
@@ -45,24 +64,19 @@ export default class WorkingSetR implements MMU {
 		}
 		if(!this.physical.hasProcessPage(pid, page)){
 			if(this.physical.isFull()){
-				console.log('***', page);
 				for(const frame of this.physical.frames){
 					if(frame.frame)
-						if(this.working_set.indexOf(`${frame.frame.process_pid}-${frame.frame.process_page}`) !== -1){
+						if(this.working_set.indexOf(`${frame.frame.process_pid}-${frame.frame.process_page}`) === -1){
 							this.physical.releaseFrame(frame.frame.process_pid, frame.frame.process_page);
 							this.physical.loadPage(pid, page);
 							break;
 						}
 				}
 			} else {
-				console.log('###', page);
 				this.physical.loadPage(pid, page);
 			}
 		}
-		console.log(this.working_set.length);
-		console.log('Working set: ', this.working_set);
-		console.log(`Referencia a ${pid}/${page} con fallo de pagina: ${fault}`);
-		console.log(`#${this.physical}`);
 		return fault;
 	}
+
 }

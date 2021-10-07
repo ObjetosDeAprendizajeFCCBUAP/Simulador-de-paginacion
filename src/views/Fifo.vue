@@ -149,12 +149,12 @@ export default defineComponent({
         const modal_open = ref(false);
         const settings_modal = ref(false);
 
-        const openModal = () => { 
+        const openModal = () => {
             modal_open.value = true;
         }
 
-        const closeModal = () => { 
-            modal_open.value = false 
+        const closeModal = () => {
+            modal_open.value = false
         }
 
         const openSettings = () => settings_modal.value = true;
@@ -167,14 +167,14 @@ export default defineComponent({
 
         const faults = computed(() => {
             if(cpu.value === undefined) return 0;
-            if(cpu.value.faults !== null) 
+            if(cpu.value.faults !== null)
                 return cpu.value.faults;
             return 0;
         });
 
         const current = computed((): string => {
             if(cpu.value === undefined) return ''
-            if(cpu.value.computed_process !== null) 
+            if(cpu.value.computed_process !== null)
                 return `${cpu.value.computed_process.PID}-${cpu.value.current_reference}`;
             return ''
         });
@@ -205,7 +205,8 @@ export default defineComponent({
         })
 
         const nextStep = () => {
-            cpu.value.next();
+            console.log(cpu.value.next());
+            console.log('Boton')
             const temp = cpu.value.getError();
             if(temp.length > 0){
                 message.value = temp;
@@ -222,8 +223,8 @@ export default defineComponent({
                                 //@ts-ignore
                                 settings.getters.getQuantum(), 'Fifo', props.opt1, props.opt2);
             console.log('___', cpu.value);
-        }       
-         
+        }
+
         onMounted(initCPU);
 
         return {

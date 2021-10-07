@@ -158,13 +158,13 @@ if referenced page in working set
 	if working set capacity is full
 		delete last recent used page
 		insert the page as most recent used
-	else 
+	else
 		insert the page as most recent used
-else 
+else
 	if working set capacity is full
 		delete last recent used page
 		insert the page as most recent used
-	else 
+	else
 		insert the page as most recent used
 	return fault
 */

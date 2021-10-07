@@ -1,6 +1,9 @@
 .DS_Store
 node_modules
 /dist
+releases
+Simulador-win32-x64
+pseudocodes.txt
 
 
 # local env files
